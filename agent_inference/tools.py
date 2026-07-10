@@ -16,6 +16,38 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
+def parse(message, begin, end):
+    """
+    This function parses a message to find all substrings between
+    a given begin_token and end_token.
+
+    Args:
+        message: The message to be parsed.
+        begin_token: The starting token (inclusive).
+        end_token: The ending token (inclusive).
+
+    Returns:
+        A list of all substrings found between the begin_token and end_token.
+    """
+    substrings = []
+    start_index = 0
+    while True:
+        begin_loc = message.find(begin, start_index)
+        if begin_loc == -1:
+            break
+        end_loc = message.find(end, begin_loc + len(begin))
+        if end_loc == -1:
+            end_loc = len(message)
+        offset = 0
+        if message[begin_loc + len(begin)] == ":":
+            offset = 1
+        substring = message[begin_loc + len(begin) + offset : end_loc]
+        substrings.append(substring)
+        start_index = end_loc + len(end)
+    return substrings
+    
+
 class GTR:
     def __init__(self, model_path="sentence-transformers/gtr-t5-xxl", device=None):
         device = device or ("cuda" if torch.cuda.is_available() else "cpu")

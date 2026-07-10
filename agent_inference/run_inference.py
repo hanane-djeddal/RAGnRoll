@@ -165,7 +165,7 @@ def main():
     for arg in vars(args):
         logger.info(f"{arg}: {getattr(args, arg)} - {parser.get_default(arg)}")
         
-    results_path = os.environ['WORK'] +"/llm-agent/llama13/" 
+    results_path ="results/llm-agent/llama13/" #os.environ['WORK'] +"/ 
     results_dir = args.output_dir if args.output_dir else results_path
     RAGAGENT_MODEL_NAME = args.ragnroll_model_name
     TRAINING_CORPUS = args.training_corpus
@@ -230,7 +230,7 @@ def main():
         model=model,
         tokenizer=tokenizer,
         tools=tools,
-        rounds=args.nb_rounds, #*2,
+        rounds=args.nb_rounds*2,
         use_tools=True, #args.retrieval,
         num_docs=args.nb_docs,
         train_corpus=TRAINING_CORPUS,
@@ -246,7 +246,8 @@ def main():
     print("Adjusted", False)
 
     if dataset_name == "HAGRID":
-        dataset = datasets.load_from_disk(os.environ["WORK"] + "/hagrid-dev") 
+        dataset = datasets.load_dataset("miracl/hagrid", split="dev")
+        #dataset = datasets.load_from_disk(os.environ["WORK"] + "/hagrid-dev") 
         query_column = "query"
     else:
         with open(args.query_file) as f:
